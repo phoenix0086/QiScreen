@@ -1,0 +1,24 @@
+.hvigor/
+oh_modules/
+node_modules/
+build/
+entry/build/
+entry/.cxx/
+entry/.preview/
+.idea/
+local.properties
+*.p12
+*.p7b
+*.cer
+.signing/
+.DS_Store
+.native-deps/
+
+# DevEco stores local signing material here.
+/build-profile.json5
+
+.local-validation/
+
+__pycache__/
+
+

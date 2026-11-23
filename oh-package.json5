@@ -1,0 +1,8 @@
+{
+  "name": "qiscreen",
+  "version": "1.0.2",
+  "description": "鸿蒙 AirPlay 扩展屏接收端",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {},
+  "modelVersion": "6.0.0"
+}
