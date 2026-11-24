@@ -412,6 +412,7 @@ struct Index {
             popupColor: PANEL,
             radius: 20,
             enableArrow: true,
+            transition: TransitionEffect.OPACITY.animation({ duration: 180, curve: Curve.EaseInOut }),
             onStateChange: (event) => { if (!event.isVisible) this.showSettings = false; }
           });
       }.width('100%');
@@ -441,7 +442,7 @@ struct Index {
     Scroll() {
       Column({ space: 18 }) {
         Row({ space: 12 }) {
-          Image($r('app.media.app_icon')).width(38).height(38).accessibilityLevel('no');
+          Image($r('app.media.app_brand_icon')).width(38).height(38).accessibilityLevel('no');
           Text('栖屏').fontSize(23).fontWeight(FontWeight.Bold).fontColor(INK);
           Blank();
           Button('使用说明').id('receiverHelp').height(44).fontSize(13)
@@ -470,7 +471,8 @@ struct Index {
       }.width('100%').constraintSize({ maxWidth: 1080 })
         .padding({ left: this.layoutWidth >= 720 ? 32 : 18, right: this.layoutWidth >= 720 ? 32 : 18,
           top: this.layoutWidth >= 720 ? 34 : 24, bottom: 24 });
-    }.width('100%').height('100%').backgroundColor(BACKGROUND).scrollBar(BarState.Auto);
+    }.width('100%').height('100%').backgroundColor(BACKGROUND).scrollBar(BarState.Auto)
+      .edgeEffect(EdgeEffect.Spring, { alwaysEnabled: false });
   }
 
   @Builder
@@ -532,7 +534,8 @@ struct Index {
             }.layoutWeight(1).backgroundColor(INSET).borderRadius(11).padding(3);
           }.width('100%');
         }.width('100%').alignItems(HorizontalAlign.Start).enabled(!this.listening && !this.busy);
-      }.width('100%').constraintSize({ maxHeight: Math.max(120, Math.min(340, this.layoutHeight - 180)) }).scrollBar(BarState.Auto);
+      }.width('100%').constraintSize({ maxHeight: Math.max(120, Math.min(340, this.layoutHeight - 180)) })
+        .scrollBar(BarState.Auto).edgeEffect(EdgeEffect.Spring, { alwaysEnabled: false });
       Text(this.listening ? '接收中，请先停止接收后修改画面设置。' : '画面设置在下一次连接时生效。')
         .fontSize(11).fontColor(MUTED).width('100%');
     }.id('receiverSettingsPanel').padding(20).width(Math.min(340, this.layoutWidth - 32)).backgroundColor(PANEL).borderRadius(20);
@@ -631,8 +634,9 @@ struct Index {
           }.width('100%');
           Scroll() {
             Text(this.licenseText).fontSize(12).fontColor(INK).width('100%');
-          }.layoutWeight(1).scrollBar(BarState.Auto);
-        }.padding(20).width('100%').height('100%').backgroundColor(BACKGROUND);
+          }.layoutWeight(1).scrollBar(BarState.Auto).edgeEffect(EdgeEffect.Spring, { alwaysEnabled: false });
+        }.padding(20).width('100%').height('100%').backgroundColor(BACKGROUND)
+          .transition(TransitionEffect.OPACITY.animation({ duration: 300, curve: Curve.EaseInOut }));
       }
 
       if (this.showHelp) {
@@ -656,8 +660,10 @@ struct Index {
           }.padding(22).width('100%');
           }.backgroundColor(PANEL).borderRadius(20).border({ width: 1, color: STROKE })
           .width(Math.min(460, this.layoutWidth - 32))
-          .constraintSize({ maxHeight: Math.max(120, this.layoutHeight - 32) }).align(Alignment.Center);
-        }.width('100%').height('100%');
+          .constraintSize({ maxHeight: Math.max(120, this.layoutHeight - 32) }).align(Alignment.Center)
+          .edgeEffect(EdgeEffect.Spring, { alwaysEnabled: false });
+        }.width('100%').height('100%')
+          .transition(TransitionEffect.OPACITY.animation({ duration: 180, curve: Curve.EaseInOut }));
       }
     }.width('100%').height('100%').backgroundColor(BACKGROUND).clip(true)
     .onAreaChange((_old: Area, area: Area) => {
