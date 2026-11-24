@@ -315,11 +315,11 @@ struct Index {
   }
 
   @Builder
-  private SettingOption(label: string, selected: boolean, id: string, select: () => void) {
+  private SettingOption(label: string, isSelected: () => boolean, id: string, select: () => void) {
     Button(label).id(id).height(40).layoutWeight(1).padding(0).borderRadius(8)
-      .fontSize(12).fontWeight(selected ? FontWeight.Medium : FontWeight.Normal)
-      .fontColor(selected ? BACKGROUND : MUTED).backgroundColor(selected ? ACCENT : Color.Transparent)
-      .accessibilitySelected(selected).onClick(select);
+      .fontSize(12).fontWeight(isSelected() ? FontWeight.Medium : FontWeight.Normal)
+      .fontColor(isSelected() ? BACKGROUND : MUTED).backgroundColor(isSelected() ? ACCENT : Color.Transparent)
+      .accessibilitySelected(isSelected()).onClick(select);
   }
 
   @Builder
@@ -389,10 +389,10 @@ struct Index {
   }
 
   @Builder
-  private ProfileValue(title: string, detail: string) {
+  private ProfileValue(title: string, detail: () => string) {
     Column({ space: 5 }) {
       Text(title).fontSize(12).fontColor(MUTED);
-      Text(detail).fontSize(15).fontWeight(FontWeight.Medium).fontColor(INK);
+      Text(detail()).fontSize(15).fontWeight(FontWeight.Medium).fontColor(INK);
     }.layoutWeight(1).alignItems(HorizontalAlign.Start);
   }
 
@@ -416,9 +416,9 @@ struct Index {
           });
       }.width('100%');
       Row({ space: 8 }) {
-        this.ProfileValue('目标分辨率', DISPLAY_PRESETS[this.quality].label);
-        this.ProfileValue('目标帧率', FRAME_RATES[this.fpsIndex] + ' 帧');
-        this.ProfileValue('视频编码', this.highQuality ? 'H.265 可选' : 'H.264');
+        this.ProfileValue('目标分辨率', () => DISPLAY_PRESETS[this.quality].label);
+        this.ProfileValue('目标帧率', () => FRAME_RATES[this.fpsIndex] + ' 帧');
+        this.ProfileValue('视频编码', () => this.highQuality ? 'H.265 可选' : 'H.264');
       }.width('100%');
       Text(this.lowLatency ? '低延迟优先' : '完整播放').fontSize(12).fontColor(MUTED);
     }.width('100%').alignItems(HorizontalAlign.Start).padding(18)
@@ -512,7 +512,7 @@ struct Index {
             Text('分辨率').fontSize(13).fontColor(MUTED).width(48);
             Row({ space: 4 }) {
               ForEach(DISPLAY_ORDER, (index: number) => {
-                this.SettingOption(DISPLAY_PRESETS[index].label, this.quality === index,
+                this.SettingOption(DISPLAY_PRESETS[index].label, () => this.quality === index,
                   index === 3 ? 'quality4k' : 'quality' + index, () => this.quality = index);
               }, (index: number) => index.toString());
             }.layoutWeight(1).backgroundColor(INSET).borderRadius(11).padding(3);
@@ -520,15 +520,15 @@ struct Index {
           Row({ space: 10 }) {
             Text('帧率').fontSize(13).fontColor(MUTED).width(48);
             Row({ space: 4 }) {
-              this.SettingOption('60 帧', this.fpsIndex === 1, 'fps60', () => this.fpsIndex = 1);
-              this.SettingOption('30 帧', this.fpsIndex === 0, 'fps30', () => this.fpsIndex = 0);
+              this.SettingOption('60 帧', () => this.fpsIndex === 1, 'fps60', () => this.fpsIndex = 1);
+              this.SettingOption('30 帧', () => this.fpsIndex === 0, 'fps30', () => this.fpsIndex = 0);
             }.layoutWeight(1).backgroundColor(INSET).borderRadius(11).padding(3);
           }.width('100%');
           Row({ space: 10 }) {
             Text('策略').fontSize(13).fontColor(MUTED).width(48);
             Row({ space: 4 }) {
-              this.SettingOption('低延迟优先', this.lowLatency, 'latencyLow', () => this.changeLatencyMode(true));
-              this.SettingOption('完整播放', !this.lowLatency, 'latencyComplete', () => this.changeLatencyMode(false));
+              this.SettingOption('低延迟优先', () => this.lowLatency, 'latencyLow', () => this.changeLatencyMode(true));
+              this.SettingOption('完整播放', () => !this.lowLatency, 'latencyComplete', () => this.changeLatencyMode(false));
             }.layoutWeight(1).backgroundColor(INSET).borderRadius(11).padding(3);
           }.width('100%');
         }.width('100%').alignItems(HorizontalAlign.Start).enabled(!this.listening && !this.busy);
